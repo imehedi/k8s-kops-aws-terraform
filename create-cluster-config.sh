@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-export KOPS_STATE_STORE=s3://<bucket-name>
+export KOPS_STATE_STORE=s3://my-bucket-name
 export NAME=domain.com
 
 kops create cluster \
      --zones eu-west-1a,eu-west-1b,eu-west-1c \
      $NAME \
-     --state=s3://mh-jenkins-k8 \
+     --state=$KOPS_STATE_STORE \
      --dry-run=true \
      --output=yaml \
      --admin-access="0.0.0.0/0" \
