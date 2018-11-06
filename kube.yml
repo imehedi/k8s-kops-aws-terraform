@@ -1,0 +1,196 @@
+apiVersion: kops/v1alpha2
+kind: Cluster
+metadata:
+  creationTimestamp: null
+  name: domain.com
+spec:
+  api:
+    loadBalancer:
+      sslCertificate: arn:aws:acm:us-east-1:<AWS_ACCOUNT_ID>:certificate/<CERT_ID>
+      type: Internal
+  authorization:
+    rbac: {}
+  channel: stable
+  cloudProvider: aws
+  configBase: s3://<bucket-name>/domain.com
+  etcdClusters:
+  - etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: master-eu-west-1a
+      name: a
+    - encryptedVolume: true
+      instanceGroup: master-eu-west-1b
+      name: b
+    - encryptedVolume: true
+      instanceGroup: master-eu-west-1c
+      name: c
+    name: main
+  - etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: master-eu-west-1a
+      name: a
+    - encryptedVolume: true
+      instanceGroup: master-eu-west-1b
+      name: b
+    - encryptedVolume: true
+      instanceGroup: master-eu-west-1c
+      name: c
+    name: events
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  kubernetesVersion: 1.10.6
+  masterPublicName: api.domain.com
+  networkCIDR: 172.20.0.0/16
+  networking:
+    weave:
+      mtu: 8912
+  nonMasqueradeCIDR: 100.64.0.0/10
+  sshAccess:
+  - 0.0.0.0/0
+  subnets:
+  - cidr: 172.20.32.0/19
+    name: eu-west-1a
+    type: Private
+    zone: eu-west-1a
+  - cidr: 172.20.64.0/19
+    name: eu-west-1b
+    type: Private
+    zone: eu-west-1b
+  - cidr: 172.20.96.0/19
+    name: eu-west-1c
+    type: Private
+    zone: eu-west-1c
+  - cidr: 172.20.0.0/22
+    name: utility-eu-west-1a
+    type: Utility
+    zone: eu-west-1a
+  - cidr: 172.20.4.0/22
+    name: utility-eu-west-1b
+    type: Utility
+    zone: eu-west-1b
+  - cidr: 172.20.8.0/22
+    name: utility-eu-west-1c
+    type: Utility
+    zone: eu-west-1c
+  topology:
+    bastion:
+      bastionPublicName: bastion.domain.com
+    dns:
+      type: Public
+    masters: private
+    nodes: private
+
+---
+
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: null
+  labels:
+    kops.k8s.io/cluster: domain.com
+  name: master-eu-west-1a
+spec:
+  associatePublicIp: true
+  image: kope.io/k8s-1.10-debian-jessie-amd64-hvm-ebs-2018-08-17
+  machineType: t2.micro
+  maxSize: 1
+  minSize: 1
+  nodeLabels:
+    kops.k8s.io/instancegroup: master-eu-west-1a
+  role: Master
+  rootVolumeSize: 30
+  subnets:
+  - eu-west-1a
+
+---
+
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: null
+  labels:
+    kops.k8s.io/cluster: domain.com
+  name: master-eu-west-1b
+spec:
+  associatePublicIp: true
+  image: kope.io/k8s-1.10-debian-jessie-amd64-hvm-ebs-2018-08-17
+  machineType: t2.micro
+  maxSize: 1
+  minSize: 1
+  nodeLabels:
+    kops.k8s.io/instancegroup: master-eu-west-1b
+  role: Master
+  rootVolumeSize: 30
+  subnets:
+  - eu-west-1b
+
+---
+
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: null
+  labels:
+    kops.k8s.io/cluster: domain.com
+  name: master-eu-west-1c
+spec:
+  associatePublicIp: true
+  image: kope.io/k8s-1.10-debian-jessie-amd64-hvm-ebs-2018-08-17
+  machineType: t2.micro
+  maxSize: 1
+  minSize: 1
+  nodeLabels:
+    kops.k8s.io/instancegroup: master-eu-west-1c
+  role: Master
+  rootVolumeSize: 30
+  subnets:
+  - eu-west-1c
+
+---
+
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: null
+  labels:
+    kops.k8s.io/cluster: domain.com
+  name: nodes
+spec:
+  associatePublicIp: true
+  image: kope.io/k8s-1.10-debian-jessie-amd64-hvm-ebs-2018-08-17
+  machineType: t2.micro
+  maxSize: 3
+  minSize: 3
+  nodeLabels:
+    kops.k8s.io/instancegroup: nodes
+  role: Node
+  rootVolumeSize: 30
+  subnets:
+  - eu-west-1a
+  - eu-west-1b
+  - eu-west-1c
+
+---
+
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: null
+  labels:
+    kops.k8s.io/cluster: domain.com
+  name: bastions
+spec:
+  image: kope.io/k8s-1.10-debian-jessie-amd64-hvm-ebs-2018-08-17
+  machineType: t2.micro
+  maxSize: 1
+  minSize: 1
+  nodeLabels:
+    kops.k8s.io/instancegroup: bastions
+  role: Bastion
+  subnets:
+  - utility-eu-west-1a
+  - utility-eu-west-1b
+  - utility-eu-west-1c
