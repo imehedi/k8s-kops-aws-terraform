@@ -1,11 +1,141 @@
-terraform = {
-  required_version = ">= 0.9.3"
-  backend "s3" {
-  bucket = "mybucket"
-  key    = "path/to/my/key"
-  region = "us-east-1"
-  }
+locals = {
+  bastion_autoscaling_group_ids     = ["${aws_autoscaling_group.bastions-domain-com.id}"]
+  bastion_security_group_ids        = ["${aws_security_group.bastion-domain-com.id}"]
+  bastions_role_arn                 = "${aws_iam_role.bastions-domain-com.arn}"
+  bastions_role_name                = "${aws_iam_role.bastions-domain-com.name}"
+  cluster_name                      = "domain.com"
+  master_autoscaling_group_ids      = ["${aws_autoscaling_group.master-eu-west-1a-masters-domain-com.id}", "${aws_autoscaling_group.master-eu-west-1b-masters-domain-com.id}", "${aws_autoscaling_group.master-eu-west-1c-masters-domain-com.id}"]
+  master_security_group_ids         = ["${aws_security_group.masters-domain-com.id}"]
+  masters_role_arn                  = "${aws_iam_role.masters-domain-com.arn}"
+  masters_role_name                 = "${aws_iam_role.masters-domain-com.name}"
+  node_autoscaling_group_ids        = ["${aws_autoscaling_group.nodes-domain-com.id}"]
+  node_security_group_ids           = ["${aws_security_group.nodes-domain-com.id}"]
+  node_subnet_ids                   = ["${aws_subnet.eu-west-1a-domain-com.id}", "${aws_subnet.eu-west-1b-domain-com.id}", "${aws_subnet.eu-west-1c-domain-com.id}"]
+  nodes_role_arn                    = "${aws_iam_role.nodes-domain-com.arn}"
+  nodes_role_name                   = "${aws_iam_role.nodes-domain-com.name}"
+  region                            = "eu-west-1"
+  route_table_private-eu-west-1a_id = "${aws_route_table.private-eu-west-1a-domain-com.id}"
+  route_table_private-eu-west-1b_id = "${aws_route_table.private-eu-west-1b-domain-com.id}"
+  route_table_private-eu-west-1c_id = "${aws_route_table.private-eu-west-1c-domain-com.id}"
+  route_table_public_id             = "${aws_route_table.domain-com.id}"
+  subnet_eu-west-1a_id              = "${aws_subnet.eu-west-1a-domain-com.id}"
+  subnet_eu-west-1b_id              = "${aws_subnet.eu-west-1b-domain-com.id}"
+  subnet_eu-west-1c_id              = "${aws_subnet.eu-west-1c-domain-com.id}"
+  subnet_utility-eu-west-1a_id      = "${aws_subnet.utility-eu-west-1a-domain-com.id}"
+  subnet_utility-eu-west-1b_id      = "${aws_subnet.utility-eu-west-1b-domain-com.id}"
+  subnet_utility-eu-west-1c_id      = "${aws_subnet.utility-eu-west-1c-domain-com.id}"
+  vpc_cidr_block                    = "${aws_vpc.domain-com.cidr_block}"
+  vpc_id                            = "${aws_vpc.domain-com.id}"
 }
+
+output "bastion_autoscaling_group_ids" {
+  value = ["${aws_autoscaling_group.bastions-domain-com.id}"]
+}
+
+output "bastion_security_group_ids" {
+  value = ["${aws_security_group.bastion-domain-com.id}"]
+}
+
+output "bastions_role_arn" {
+  value = "${aws_iam_role.bastions-domain-com.arn}"
+}
+
+output "bastions_role_name" {
+  value = "${aws_iam_role.bastions-domain-com.name}"
+}
+
+output "cluster_name" {
+  value = "domain.com"
+}
+
+output "master_autoscaling_group_ids" {
+  value = ["${aws_autoscaling_group.master-eu-west-1a-masters-domain-com.id}", "${aws_autoscaling_group.master-eu-west-1b-masters-domain-com.id}", "${aws_autoscaling_group.master-eu-west-1c-masters-domain-com.id}"]
+}
+
+output "master_security_group_ids" {
+  value = ["${aws_security_group.masters-domain-com.id}"]
+}
+
+output "masters_role_arn" {
+  value = "${aws_iam_role.masters-domain-com.arn}"
+}
+
+output "masters_role_name" {
+  value = "${aws_iam_role.masters-domain-com.name}"
+}
+
+output "node_autoscaling_group_ids" {
+  value = ["${aws_autoscaling_group.nodes-domain-com.id}"]
+}
+
+output "node_security_group_ids" {
+  value = ["${aws_security_group.nodes-domain-com.id}"]
+}
+
+output "node_subnet_ids" {
+  value = ["${aws_subnet.eu-west-1a-domain-com.id}", "${aws_subnet.eu-west-1b-domain-com.id}", "${aws_subnet.eu-west-1c-domain-com.id}"]
+}
+
+output "nodes_role_arn" {
+  value = "${aws_iam_role.nodes-domain-com.arn}"
+}
+
+output "nodes_role_name" {
+  value = "${aws_iam_role.nodes-domain-com.name}"
+}
+
+output "region" {
+  value = "eu-west-1"
+}
+
+output "route_table_private-eu-west-1a_id" {
+  value = "${aws_route_table.private-eu-west-1a-domain-com.id}"
+}
+
+output "route_table_private-eu-west-1b_id" {
+  value = "${aws_route_table.private-eu-west-1b-domain-com.id}"
+}
+
+output "route_table_private-eu-west-1c_id" {
+  value = "${aws_route_table.private-eu-west-1c-domain-com.id}"
+}
+
+output "route_table_public_id" {
+  value = "${aws_route_table.domain-com.id}"
+}
+
+output "subnet_eu-west-1a_id" {
+  value = "${aws_subnet.eu-west-1a-domain-com.id}"
+}
+
+output "subnet_eu-west-1b_id" {
+  value = "${aws_subnet.eu-west-1b-domain-com.id}"
+}
+
+output "subnet_eu-west-1c_id" {
+  value = "${aws_subnet.eu-west-1c-domain-com.id}"
+}
+
+output "subnet_utility-eu-west-1a_id" {
+  value = "${aws_subnet.utility-eu-west-1a-domain-com.id}"
+}
+
+output "subnet_utility-eu-west-1b_id" {
+  value = "${aws_subnet.utility-eu-west-1b-domain-com.id}"
+}
+
+output "subnet_utility-eu-west-1c_id" {
+  value = "${aws_subnet.utility-eu-west-1c-domain-com.id}"
+}
+
+output "vpc_cidr_block" {
+  value = "${aws_vpc.domain-com.cidr_block}"
+}
+
+output "vpc_id" {
+  value = "${aws_vpc.domain-com.id}"
+}
+
 provider "aws" {
   region = "eu-west-1"
 }
@@ -212,10 +342,10 @@ resource "aws_ebs_volume" "a-etcd-events-domain-com" {
   encrypted         = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "a.etcd-events.domain.com"
-    "k8s.io/etcd/events"              = "a/a,b,c"
-    "k8s.io/role/master"              = "1"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "a.etcd-events.domain.com"
+    "k8s.io/etcd/events"               = "a/a,b,c"
+    "k8s.io/role/master"               = "1"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -227,10 +357,10 @@ resource "aws_ebs_volume" "a-etcd-main-domain-com" {
   encrypted         = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "a.etcd-main.domain.com"
-    "k8s.io/etcd/main"                = "a/a,b,c"
-    "k8s.io/role/master"              = "1"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "a.etcd-main.domain.com"
+    "k8s.io/etcd/main"                 = "a/a,b,c"
+    "k8s.io/role/master"               = "1"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -242,10 +372,10 @@ resource "aws_ebs_volume" "b-etcd-events-domain-com" {
   encrypted         = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "b.etcd-events.domain.com"
-    "k8s.io/etcd/events"              = "b/a,b,c"
-    "k8s.io/role/master"              = "1"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "b.etcd-events.domain.com"
+    "k8s.io/etcd/events"               = "b/a,b,c"
+    "k8s.io/role/master"               = "1"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -257,10 +387,10 @@ resource "aws_ebs_volume" "b-etcd-main-domain-com" {
   encrypted         = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "b.etcd-main.domain.com"
-    "k8s.io/etcd/main"                = "b/a,b,c"
-    "k8s.io/role/master"              = "1"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "b.etcd-main.domain.com"
+    "k8s.io/etcd/main"                 = "b/a,b,c"
+    "k8s.io/role/master"               = "1"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -272,10 +402,10 @@ resource "aws_ebs_volume" "c-etcd-events-domain-com" {
   encrypted         = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "c.etcd-events.domain.com"
-    "k8s.io/etcd/events"              = "c/a,b,c"
-    "k8s.io/role/master"              = "1"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "c.etcd-events.domain.com"
+    "k8s.io/etcd/events"               = "c/a,b,c"
+    "k8s.io/role/master"               = "1"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -287,10 +417,10 @@ resource "aws_ebs_volume" "c-etcd-main-domain-com" {
   encrypted         = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "c.etcd-main.domain.com"
-    "k8s.io/etcd/main"                = "c/a,b,c"
-    "k8s.io/role/master"              = "1"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "c.etcd-main.domain.com"
+    "k8s.io/etcd/main"                 = "c/a,b,c"
+    "k8s.io/role/master"               = "1"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -299,8 +429,8 @@ resource "aws_eip" "eu-west-1a-domain-com" {
   vpc = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1a.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1a.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -309,8 +439,8 @@ resource "aws_eip" "eu-west-1b-domain-com" {
   vpc = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1b.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1b.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -319,14 +449,14 @@ resource "aws_eip" "eu-west-1c-domain-com" {
   vpc = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1c.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1c.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
 
 resource "aws_elb" "api-domain-com" {
-  name = "api-domain-com-his23v"
+  name = "api-domain-com-riofbp"
 
   listener = {
     instance_port     = 443
@@ -356,7 +486,7 @@ resource "aws_elb" "api-domain-com" {
 }
 
 resource "aws_elb" "bastion-domain-com" {
-  name = "bastion-domain-com-fk46pp"
+  name = "bastion-domain-com-6p32k7"
 
   listener = {
     instance_port     = 22
@@ -436,8 +566,8 @@ resource "aws_internet_gateway" "domain-com" {
   vpc_id = "${aws_vpc.domain-com.id}"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -566,8 +696,8 @@ resource "aws_nat_gateway" "eu-west-1a-domain-com" {
   subnet_id     = "${aws_subnet.utility-eu-west-1a-domain-com.id}"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1a.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1a.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -577,8 +707,8 @@ resource "aws_nat_gateway" "eu-west-1b-domain-com" {
   subnet_id     = "${aws_subnet.utility-eu-west-1b-domain-com.id}"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1b.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1b.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -588,8 +718,8 @@ resource "aws_nat_gateway" "eu-west-1c-domain-com" {
   subnet_id     = "${aws_subnet.utility-eu-west-1c-domain-com.id}"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1c.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1c.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -628,7 +758,7 @@ resource "aws_route53_record" "api-domain-com" {
     evaluate_target_health = false
   }
 
-  zone_id = "/hostedzone/ZCZ2GPGL0J3GH"
+  zone_id = "/hostedzone/Z248GN2WOAP88Z"
 }
 
 resource "aws_route53_record" "bastion-domain-com" {
@@ -641,17 +771,17 @@ resource "aws_route53_record" "bastion-domain-com" {
     evaluate_target_health = false
   }
 
-  zone_id = "/hostedzone/ZCZ2GPGL0J3GH"
+  zone_id = "/hostedzone/Z248GN2WOAP88Z"
 }
 
 resource "aws_route_table" "domain-com" {
   vpc_id = "${aws_vpc.domain-com.id}"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/kops/role"         = "public"
+    "kubernetes.io/kops/role"          = "public"
   }
 }
 
@@ -659,10 +789,10 @@ resource "aws_route_table" "private-eu-west-1a-domain-com" {
   vpc_id = "${aws_vpc.domain-com.id}"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "private-eu-west-1a.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "private-eu-west-1a.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/kops/role"         = "private-eu-west-1a"
+    "kubernetes.io/kops/role"          = "private-eu-west-1a"
   }
 }
 
@@ -670,10 +800,10 @@ resource "aws_route_table" "private-eu-west-1b-domain-com" {
   vpc_id = "${aws_vpc.domain-com.id}"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "private-eu-west-1b.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "private-eu-west-1b.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/kops/role"         = "private-eu-west-1b"
+    "kubernetes.io/kops/role"          = "private-eu-west-1b"
   }
 }
 
@@ -681,10 +811,10 @@ resource "aws_route_table" "private-eu-west-1c-domain-com" {
   vpc_id = "${aws_vpc.domain-com.id}"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "private-eu-west-1c.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "private-eu-west-1c.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/kops/role"         = "private-eu-west-1c"
+    "kubernetes.io/kops/role"          = "private-eu-west-1c"
   }
 }
 
@@ -724,20 +854,8 @@ resource "aws_security_group" "api-elb-domain-com" {
   description = "Security group for api ELB"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "api-elb.domain.com"
-    "kubernetes.io/cluster/domain.com" = "owned"
-  }
-}
-
-resource "aws_security_group" "bastion-elb-domain-com" {
-  name        = "bastion-elb.domain.com"
-  vpc_id      = "${aws_vpc.domain-com.id}"
-  description = "Security group for bastion ELB"
-
-  tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "bastion-elb.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "api-elb.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -748,8 +866,20 @@ resource "aws_security_group" "bastion-domain-com" {
   description = "Security group for bastion"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "bastion.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "bastion.domain.com"
+    "kubernetes.io/cluster/domain.com" = "owned"
+  }
+}
+
+resource "aws_security_group" "bastion-elb-domain-com" {
+  name        = "bastion-elb.domain.com"
+  vpc_id      = "${aws_vpc.domain-com.id}"
+  description = "Security group for bastion ELB"
+
+  tags = {
+    KubernetesCluster                  = "domain.com"
+    Name                               = "bastion-elb.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -760,8 +890,8 @@ resource "aws_security_group" "masters-domain-com" {
   description = "Security group for masters"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "masters.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "masters.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -772,8 +902,8 @@ resource "aws_security_group" "nodes-domain-com" {
   description = "Security group for nodes"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "nodes.domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "nodes.domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -946,11 +1076,11 @@ resource "aws_subnet" "eu-west-1a-domain-com" {
   availability_zone = "eu-west-1a"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1a.domain.com"
-    SubnetType                        = "Private"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1a.domain.com"
+    SubnetType                         = "Private"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/role/internal-elb"  = "1"
   }
 }
 
@@ -960,11 +1090,11 @@ resource "aws_subnet" "eu-west-1b-domain-com" {
   availability_zone = "eu-west-1b"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1b.domain.com"
-    SubnetType                        = "Private"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1b.domain.com"
+    SubnetType                         = "Private"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/role/internal-elb"  = "1"
   }
 }
 
@@ -974,11 +1104,11 @@ resource "aws_subnet" "eu-west-1c-domain-com" {
   availability_zone = "eu-west-1c"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "eu-west-1c.domain.com"
-    SubnetType                        = "Private"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "eu-west-1c.domain.com"
+    SubnetType                         = "Private"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/role/internal-elb"  = "1"
   }
 }
 
@@ -988,11 +1118,11 @@ resource "aws_subnet" "utility-eu-west-1a-domain-com" {
   availability_zone = "eu-west-1a"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "utility-eu-west-1a.domain.com"
-    SubnetType                        = "Utility"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "utility-eu-west-1a.domain.com"
+    SubnetType                         = "Utility"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/role/elb"          = "1"
+    "kubernetes.io/role/elb"           = "1"
   }
 }
 
@@ -1002,11 +1132,11 @@ resource "aws_subnet" "utility-eu-west-1b-domain-com" {
   availability_zone = "eu-west-1b"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "utility-eu-west-1b.domain.com"
-    SubnetType                        = "Utility"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "utility-eu-west-1b.domain.com"
+    SubnetType                         = "Utility"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/role/elb"          = "1"
+    "kubernetes.io/role/elb"           = "1"
   }
 }
 
@@ -1016,11 +1146,11 @@ resource "aws_subnet" "utility-eu-west-1c-domain-com" {
   availability_zone = "eu-west-1c"
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "utility-eu-west-1c.domain.com"
-    SubnetType                        = "Utility"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "utility-eu-west-1c.domain.com"
+    SubnetType                         = "Utility"
     "kubernetes.io/cluster/domain.com" = "owned"
-    "kubernetes.io/role/elb"          = "1"
+    "kubernetes.io/role/elb"           = "1"
   }
 }
 
@@ -1030,8 +1160,8 @@ resource "aws_vpc" "domain-com" {
   enable_dns_support   = true
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -1041,8 +1171,8 @@ resource "aws_vpc_dhcp_options" "domain-com" {
   domain_name_servers = ["AmazonProvidedDNS"]
 
   tags = {
-    KubernetesCluster                 = "domain.com"
-    Name                              = "domain.com"
+    KubernetesCluster                  = "domain.com"
+    Name                               = "domain.com"
     "kubernetes.io/cluster/domain.com" = "owned"
   }
 }
@@ -1050,4 +1180,16 @@ resource "aws_vpc_dhcp_options" "domain-com" {
 resource "aws_vpc_dhcp_options_association" "domain-com" {
   vpc_id          = "${aws_vpc.domain-com.id}"
   dhcp_options_id = "${aws_vpc_dhcp_options.domain-com.id}"
+}
+
+terraform = {
+  required_version = ">= 0.9.3"
+  backend "s3" {
+  bucket = "mybucket"
+  key    = "path/to/my/key"
+  region = "us-east-1"
+  }
+}
+provider "aws" {
+  region = "eu-west-1"
 }
