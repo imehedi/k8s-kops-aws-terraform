@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 export KOPS_STATE_STORE=s3://<bucket-name>
 export NAME=domain.com
 
@@ -27,3 +28,7 @@ kops create cluster \
      --bastion=true \
      --out=. \
      --target=terraform
+
+terraform init
+terraform plan
+terraform apply 
