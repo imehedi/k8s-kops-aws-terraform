@@ -6,6 +6,9 @@
 This is a quick start example to spin up a Kubernetes cluster on AWS using terraform plan generated using kops.
 
 ## How can I use this?
+
+The use of **```create-cluster-config.sh```** requires an environment containing kops and terraform. You may want to use my pre-baked docker image **```docker pull imehedi/k8s-manager```** or the ***Dockerfile*** from [this repo](https://github.com/imehedi/kite-docker)
+
 Copy contents from **```create-cluster-config.sh```** and customise as appropriate (cluster TLD, bucket name, etc). Use this to generate terraform plans and relevant templates (i.e. IAM/Policy/SecurityGroups/Launch Configurations). All other files are given here only as a reference.
 
     export KOPS_STATE_STORE=s3://my-bucket-name
